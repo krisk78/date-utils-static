@@ -1,12 +1,4 @@
-Libs-2 includes these static libraries:
-  - str-utils-static
-  - date-utils-static
-  - file-utils-static
-  - requirements-static
-  - conflicts-static
-  - usage-static
-  - consoleApp-static
-
+Static library date-utils-static
 Copyright (c) 2024 Christophe COUAILLET
 
 MIT License
