@@ -1,6 +1,6 @@
 {
   "name": "date-utils-static",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-beta",
   "description": "Static library that provides few date functions",
   "homepage": "https://github.com/krisk78/date-utils-static",
   "license": "MIT",
