@@ -35,10 +35,10 @@ Returns the format of the target strings
 
 #### unsigned char isValid(const unsigned char mode)
 Returns the validity status of the conversion engine:
-* NONE: Both source and target date formats have not been set
-* FROM: Only source date format has been set
-* TO: Only target date format has been set
-* BOTH: Both source and target format has been set
+* const unsigned char NONE: Both source and target date formats have not been set
+* const unsigned char FROM: Only source date format has been set
+* const unsigned char TO: Only target date format has been set
+* const unsigned char BOTH: Both source and target format has been set
 
 #### bool checkStrDate(const std::string& str)
 Checks if the given string represents a date regarding to the source date format
