@@ -44,4 +44,4 @@ Returns the validity status of the conversion engine:
 Checks if the given string represents a date regarding to the source date format
 
 #### std::string convStrDate(const std::string& date_str)
-Returns a string formatted date regarding the previously date formats set to source and target strings.
+Returns a string formatted date using previously date formats set for source and target strings.
