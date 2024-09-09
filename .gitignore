@@ -1,4 +1,6 @@
 .vs/
 .git/
 out/
-vcpkg_installed/
+/.vs
+/.git
+/out

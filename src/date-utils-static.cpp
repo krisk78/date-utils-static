@@ -12,7 +12,10 @@
 #include <date-utils-static.hpp>
 #include <str-utils-static.hpp>
 
-bool checkDate(int day, int month, int year)
+namespace date = date_utils;
+namespace str = str_utils;
+
+bool date_utils::checkDate(int day, int month, int year)
 {
     if (day < 1 || day > 31)
         return false;
@@ -31,12 +34,7 @@ bool checkDate(int day, int month, int year)
     return true;
 }
 
-const unsigned char strDateConverter::NONE;
-const unsigned char strDateConverter::BOTH;
-const unsigned char strDateConverter::FROM;
-const unsigned char strDateConverter::TO;
-
-strDateConverter::strDateConverter()
+date::strDateConverter::strDateConverter()
 {
     auto t = time(0);
 #ifdef _WIN32
@@ -46,9 +44,14 @@ strDateConverter::strDateConverter()
 #else
     century = localtime(&t)->tm_year / 100 + 19;
 #endif
+    m_fromLen = {};
+    m_fromPos = {};
+    m_toLen = {};
+    m_toPos = {};
+    m_toOrder = {};
 }
 
-bool strDateConverter::setToFmt(const std::string& fmt)
+bool date::strDateConverter::setToFmt(const std::string& fmt)
 {
     bool m_valid = m_fromValid && setFmt(fmt, m_toFmt, m_toDelim, m_toPos, m_toLen, m_toSep, m_toValid);
     if (m_valid)
@@ -63,7 +66,7 @@ bool strDateConverter::setToFmt(const std::string& fmt)
     return m_valid;
 }
 
-unsigned char strDateConverter::isValid(const unsigned char mode)
+const unsigned char date::strDateConverter::isValid(const unsigned char mode)
 {
     unsigned char result = NONE;
     if (m_fromValid && (mode & FROM) == FROM)
@@ -73,18 +76,18 @@ unsigned char strDateConverter::isValid(const unsigned char mode)
     return result;
 }
 
-bool strDateConverter::checkStrDate(const std::string& str)
+bool date::strDateConverter::checkStrDate(const std::string& str)
 {
     if (!m_fromValid)
         return false;
-    auto date = trimc(str);
+    auto date = str::trimc(str);
     if (date.length() > m_fromFmt.length() + 5)
         return false;
     std::array<unsigned long, 3> compvals;
     compvals.fill(0);
     if (m_fromDelim)
     {
-        std::vector<std::string> comps = split(date, m_fromSep);
+        std::vector<std::string> comps = str::split(date, m_fromSep);
         if (comps.size() != 3)
             return false;
         for (size_t i = 0; i < 3; i++)
@@ -130,13 +133,13 @@ bool strDateConverter::checkStrDate(const std::string& str)
     return checkDate(compvals[DAY_COMP], compvals[MONTH_COMP], compvals[YEAR_COMP]);
 }
 
-std::string strDateConverter::convStrDate(const std::string& date)
+std::string date::strDateConverter::convStrDate(const std::string& date)
 {
     std::string result{};
     std::vector<std::string> comps{};
     if (m_fromDelim)
     {
-        auto comps2 = split(date, m_fromSep);
+        auto comps2 = str::split(date, m_fromSep);
         if (comps2.size() != 3)
             return result;
         for (unsigned char i = 0; i < 3; i++)
@@ -172,13 +175,13 @@ std::string strDateConverter::convStrDate(const std::string& date)
     return result;
 }
 
-bool strDateConverter::setFmt(const std::string& fmt, std::string& m_fmt, bool& m_delim, std::array<unsigned char, 3>& m_pos, std::array<unsigned char, 3>& m_len, char& m_sep, bool& m_val)
+bool date::strDateConverter::setFmt(const std::string& fmt, std::string& m_fmt, bool& m_delim, std::array<unsigned char, 3>& m_pos, std::array<unsigned char, 3>& m_len, char& m_sep, bool& m_val)
 {
     m_val = true;
     m_delim = false;
     m_pos.fill(0);
     m_len.fill(0);
-    auto fmtc = to_lower(trimc(fmt));
+    auto fmtc = str::to_lower(str::trimc(fmt));
     m_fmt = fmtc;
     auto itr = fmtc.find_first_not_of("dmy");
     if (itr != std::string::npos)
@@ -188,7 +191,7 @@ bool strDateConverter::setFmt(const std::string& fmt, std::string& m_fmt, bool& 
     }
     if (m_delim)
     {
-        std::vector<std::string> comps = split(fmtc, m_sep);
+        std::vector<std::string> comps = str::split(fmtc, m_sep);
         if (comps.size() != 3)
             return m_val = false;
         for (unsigned char i = 0; i < comps.size(); i++)
