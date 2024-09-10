@@ -1,4 +1,5 @@
-// utils.cpp : Defines the functions for the static library.
+// \file date-utils-static.cpp
+// \brief Implements the functions for the static library.
 //
 
 #include <string>
